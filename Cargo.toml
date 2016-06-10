@@ -1,0 +1,8 @@
+[package]
+name = "sigma"
+version = "0.1.0"
+authors = ["Bobhostern <bob.hostern@gmail.com>"]
+
+[dependencies]
+quick-error = "1.0"
+url = "1.1"

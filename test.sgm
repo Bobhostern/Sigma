@@ -1,0 +1,61 @@
+# Be lovely. Each file is considered a module.
+# Support tuples after first version? Nah. No tuples. I'm not ready for them TnT
+import (print) from "core://io/console"
+import (Fiber[@submodule]) from "core://concurrency"
+#Create fibers once you have closures
+# ^NOTE: Using an import specifier helps importing (Yes.)
+# @submodule does a submodule, @struct a struct, @trait a trait
+# Default import name search is: trait -> submodule -> struct
+# Yes, a trait must be in MODULE SCOPE to be usable.
+
+# BIGNOTE: You CAN use structs as an argument, but structs are opaque.
+# SO default name resolving order for types is: traits -> structs
+
+struct Pair[T: Numeric] is
+	a: T
+	b: T
+end
+
+#{
+# Submodules can hold stuff that you want out of the public namespace.
+submodule Pair is
+	func[T: Numeric] new(a: T, b: T)
+		Pair {
+			a: a,
+			b: b
+		}
+end
+}#
+
+# A common pattern in Sigma, as there are no methods on a struct by itself
+trait Pair is
+	public a
+	public b
+	# Different ways to write getter/setter methods
+	#{
+		1. Use "access" for getter, "write" for setter, and "public" for getter&setter
+			access x
+			write y # Least used....
+			public z
+		2. Manually implement "_get_#" for getter, and "_set_#" for setter
+			def _get_biz() -> Any
+			def _set_biz(a: Any)
+	}#
+	def sum_prod() -> Numeric # Yes, you CAN specify a trait as a return type
+end
+
+impl[T: Numeric] Pair for Pair[T] is
+	public a -> @a # Must pass a symbol to tell which field to use
+	public b -> @b
+	def sum_prod() -> Numeric do
+		self.a + self.b # Not the external stuff. Use the internal space.
+	end
+end
+
+func main() do
+	var a = Pair::new(0, 0) # :: is the scope accessor operator.
+	# . is the method call operator
+	var b: Pair = Pair::new(1, 0) # Yeah, you can explicitly specify type like this.
+
+	print(b.sum_prod())
+end

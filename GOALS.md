@@ -1,0 +1,2 @@
+- *Actually* finish a language for once.
+- Use ropes instead of strings for the native character array type
